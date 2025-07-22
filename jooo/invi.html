@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For My Bunny 💘</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .page {
+      display: none;
+      height: 100vh;
+      width: 100vw;
+      position: absolute;
+      top: 0;
+      left: 0;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .active { display: flex; }
+
+    h1 {
+      color: #d63384;
+      margin-bottom: 20px;
+      font-size: 1.8em;
+    }
+
+    .btn {
+      padding: 15px 30px;
+      margin: 10px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .yes-btn {
+      background-color: #ff69b4;
+      color: white;
+    }
+
+    .no-btn {
+      background-color: #ccc;
+      color: #333;
+      position: relative;
+    }
+
+    video {
+      margin: 20px 0;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      max-width: 90%;
+    }
+
+    .bunny-face {
+      font-size: 60px;
+      margin-bottom: 10px;
+    }
+
+    .envelope {
+      position: relative;
+      width: 90vw;
+      max-width: 360px;
+      height: 200px;
+      background: #fcd2e2;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      padding: 20px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .envelope:hover {
+      box-shadow: 0 0 20px #ff69b4;
+    }
+
+    .flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 30px;
+      background: #ffb6c1;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+    }
+
+    .letter-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: white;
+      width: 90vw;
+      max-width: 400px;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      z-index: 10;
+      opacity: 0;
+      transition: all 0.5s ease;
+      text-align: center;
+    }
+
+    .letter-popup.show {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    .invite-title {
+      color: #d63384;
+      margin-top: 0;
+      font-size: 1.4em;
+    }
+
+    #invite-text {
+      font-size: 15px;
+      color: #333;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .signature {
+      font-weight: bold;
+      font-size: 16px;
+      color: #ff69b4;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      0% { text-shadow: 0 0 5px #ffb6c1; }
+      100% { text-shadow: 0 0 15px #ff69b4; }
+    }
+
+    .floating-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 5;
+    }
+
+    .floating-emoji {
+      position: absolute;
+      animation: floatForever 10s linear infinite;
+      opacity: 0.8;
+      font-size: 24px;
+    }
+
+    @keyframes floatForever {
+      0% { transform: translateY(100vh); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-100vh); opacity: 0; }
+    }
+
+    @media screen and (max-width: 600px) {
+      h1 { font-size: 1.4em; }
+      .btn { padding: 12px 24px; font-size: 16px; }
+      .bunny-face { font-size: 48px; }
+      #invite-text { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <audio id="bg-music" src="bgmusic.mp3" loop></audio>
+
+  <div id="main-page" class="page active">
+    <h1>Would you spend August 9 with me on a special date? 💘</h1>
+    <button class="btn yes-btn" onclick="startLove();">Yes</button>
+    <button class="btn no-btn" id="noBtn1">No</button>
+  </div>
+
+  <div id="love-page" class="page">
+    <h1>YOU LOVE ME BUN? 🐰❤️</h1>
+    <button class="btn yes-btn" onclick="showFinalPage(); startEmojiRain(['💗','🐰']);">Yes</button>
+    <button class="btn no-btn" id="noBtn2">No</button>
+  </div>
+
+  <div id="final-page" class="page">
+    <h1>YAY! I LOVE YOU TOO BUN! 🥰💖</h1>
+    <video id="loveVideo" width="360" height="215" controls autoplay>
+      <source src="love.mp4" type="video/mp4">
+    </video>
+    <button class="btn yes-btn" onclick="goToInvitePage(); startEmojiRain(['💗','🐰']);">Next</button>
+  </div>
+
+  <div id="invitation-page" class="page">
+    <div class="envelope" id="envelope">
+      <div class="flap"></div>
+      <div class="bunny-face">🐰</div>
+      <h1>Tap to Open</h1>
+    </div>
+  </div>
+
+  <div class="letter-popup" id="letterPopup">
+    <h1 class="invite-title">💌 INVITATION 💌</h1>
+    <div id="invite-text">
+August 9, 2025 | 3:00 PM
+
+My Dearest Bun,
+
+Please be ready by 1:00 PM—I will pick you up, and together, we’ll head to SMDC Air Residences, Makati.
+
+I simply want to spend quality time with you—just the two of us, enjoying every moment together.
+
+With all my love,  
+<span class="signature"> BUN 🐰💕</span>
+    </div>
+    <br>
+    <button class="btn yes-btn" onclick="closeLetter()">Close</button>
+  </div>
+
+  <div class="floating-container" id="emojiRainContainer"></div>
+
+  <script>
+    const pages = {
+      main: document.getElementById('main-page'),
+      love: document.getElementById('love-page'),
+      final: document.getElementById('final-page'),
+      invite: document.getElementById('invitation-page'),
+    };
+
+    const bgMusic = document.getElementById("bg-music");
+    const loveVideo = document.getElementById("loveVideo");
+    let rainInterval;
+    let fadeOutInterval;
+
+    function showPage(name) {
+      Object.values(pages).forEach(p => p.classList.remove('active'));
+      pages[name].classList.add('active');
+    }
+
+    function startLove() {
+      bgMusic.play();
+      bgMusic.volume = 1;
+      showPage('love');
+      startEmojiRain(['💗', '🐰']);
+    }
+
+    function showFinalPage() {
+      showPage('final');
+    }
+
+    function goToInvitePage() {
+      bgMusic.play();
+      bgMusic.volume = 1;
+      showPage('invite');
+    }
+
+    document.getElementById("envelope").addEventListener("click", function () {
+      document.getElementById("letterPopup").classList.add("show");
+      startEmojiRain(["🐰", "💖"]);
+    });
+
+    function closeLetter() {
+      document.getElementById("letterPopup").classList.remove("show");
+    }
+
+    function moveButton(btn) {
+      const i = Math.floor(Math.random() * (window.innerWidth - 100));
+      const j = Math.floor(Math.random() * (window.innerHeight - 100));
+      btn.style.position = 'absolute';
+      btn.style.left = `${i}px`;
+      btn.style.top = `${j}px`;
+    }
+
+    document.getElementById('noBtn1').addEventListener('mouseover', () => moveButton(noBtn1));
+    document.getElementById('noBtn2').addEventListener('mouseover', () => moveButton(noBtn2));
+
+    function startEmojiRain(emojis) {
+      const container = document.getElementById("emojiRainContainer");
+      clearInterval(rainInterval);
+      rainInterval = setInterval(() => {
+        const emoji = document.createElement("div");
+        emoji.className = "floating-emoji";
+        emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = Math.random() * 100 + "vw";
+        emoji.style.top = "-30px";
+        emoji.style.fontSize = Math.random() * 20 + 20 + "px";
+        emoji.style.animationDuration = (8 + Math.random() * 4) + "s";
+        container.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 12000);
+      }, 100);
+    }
+
+    loveVideo.addEventListener("play", () => {
+      fadeOutInterval = setInterval(() => {
+        if (bgMusic.volume > 0.01) {
+          bgMusic.volume -= 0.01;
+        } else {
+          bgMusic.pause();
+          bgMusic.volume = 0;
+          clearInterval(fadeOutInterval);
+        }
+      }, 100);
+    });
+
+    loveVideo.addEventListener("ended", () => {
+      bgMusic.play();
+      bgMusic.volume = 1;
+    });
+  </script>
+</body>
+</html>
